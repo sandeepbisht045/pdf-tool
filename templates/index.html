@@ -84,7 +84,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark  sticky-top" >
       <a class="navbar-brand" href="#" style="margin-left: 1%;">PDF tool</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -104,19 +104,19 @@
     <!-- Content -->
     <div id="content" class="container mt-5">
         <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-9" id="pdf_style">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-9" id="pdf_style">
               Protect your PDF here
             </div>
         </div>
          </div>
          <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-8" id="">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-8" id="">
                 <form action="/pdf_tool" method="post" enctype="multipart/form-data" id="myForm">
                     {%csrf_token%}
                 <label for="input_style" class="custom-file-label">
-                    <input accept="application/pdf" type="file" id="input_style" class="col-md-6" name="import" >
+                    <input accept="application/pdf" type="file" id="input_style" class="col-sm-6" name="import" >
                 </label>
                 <input style="display: inline;" autocomplete="off" onBlur="if(this.value.trim() == '') {this.value = ''}" placeholder="Set a strong password" class="m-3 form-control form-control" type="password" id="password" name="password">
   <img src="{% static 'admin/img/show.svg' %}" style="width: 20px; height: auto;" id="passwordToggle" onclick="togglePasswordVisibility()" >
@@ -126,7 +126,8 @@
 
                 </div>
                 <div style="width: 30%; display: none;" class="alert alert-info alert-dismissible fade show mt-4" role="alert" id="message">{{info}}</div>
-                <input type="text" value="protect" id="protect_unlock" style="visibility: hidden;" name="protect_unlock">
+                <a data-success="{{success}}" id="downloadLink" style="display: none;"  class="btn btn-primary m-5" href="data:application/pdf;base64,{{ pdf_content }}" download={{file_name}}>Download PDF</a>
+                <input data-type="{{type}}" type="text" value="protect" id="protect_unlock" style="visibility: hidden;" name="protect_unlock">
             </form>
             </div>
 
@@ -143,13 +144,10 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
     crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
-    integrity="sha384-3DexdyQ2MeQ3XDM8jizqWZ3S6LRydTuOyvkXnB04wLxHpmmlOoyNYn0iQt3Xjj5x"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-    integrity="sha384-pzjw8f+ua0/gZ8zks5RqXnOg5QbW9k6Ti/QpW+JHXxhLw6++5B3G5O8fyb6Pe9zP"
-    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
   <script>
+  
     // changing text color of protect pdf on click
   const protectPdfLink = document.getElementById("protect_pdf");
 protectPdfLink.addEventListener("click", function(event) {
@@ -190,6 +188,7 @@ unlockPdfLink.addEventListener("click", function(event) {
     }
     form.submit();
   document.getElementById('myForm').reset();
+
   });
 
 //  manipulating display of message box
@@ -212,6 +211,23 @@ function togglePasswordVisibility() {
 
       }
     }
+  //  handle download
+  var isSucess=document.getElementById("downloadLink").getAttribute("data-success")
+  if (isSucess=='success'){
+    document.getElementById("downloadLink").style.display =''
+  }
+  // handle some logic on page refresh
+ var data_type = document.getElementById('protect_unlock');
+if (data_type.getAttribute("data-type") === 'unlock') {
+  
+const unlockPdf = document.getElementById('unlock_pdf');
+unlockPdf.style.color = 'orange';
+  document.getElementById('pdf_style').innerText = "Unlock your PDF here"
+  document.getElementById('protect_pdf').style.color = ""
+  document.getElementById('protect_unlock').value = 'unlock'
+  document.getElementById('password').placeholder = 'Enter password to unlock'
+
+}
   </script>
 </body>
 
