@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% load static %}
+  <link rel="icon" href="{% static 'admin/img/pdf.svg' %}" type="image/svg+xml">
+
+  
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+   <style>
+    /* Set the fixed height of the footer */
+    html,
+    body {
+      height: 100%;
+    }
+
+    /* Style definitions for the sticky footer */
+    #wrapper {
+      min-height: 100%;
+      position: relative;
+      
+    }
+
+    #content {
+      padding-bottom: 60px; /* Adjust this value based on the height of your footer */
+    }
+
+    #footer {
+      display: block; /* Initially hide the footer */
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 60px; /* Adjust this value based on the height of your footer */
+      background-color: #212529 !important; color: white;
+    }
+    #pdf_style {
+        color:#383E45;font-size: 42px;font-family: Arial, Helvetica, sans-serif;line-height: 46px;font-weight: 600;
+        text-decoration:none solid rgb(56, 62, 69)
+
+    }
+    #input_style{
+        color: #FFFFFF;background-color: #E53C2D;font-family: Arial, Helvetica, sans-serif;font-size: 28px;
+        line-height: 32px;vertical-align: middle;letter-spacing: 0.3px;word-spacing: 0px;margin: 0px 0px 12px;
+        padding: 24px 56px;font-weight: 600;font-style: normal;border-radius: 8px;
+       
+ 
+    }
+    ::file-selector-button {
+  display: none;
+}
+.submit-button {
+  background-color: #4CAF50; /* Set the background color */
+  border: none; /* Remove the border */
+  color: white; /* Set the text color */
+  padding: 12px 24px; /* Set the padding */
+  font-size: 16px; /* Set the font size */
+  cursor: pointer; /* Add a cursor hover effect */
+  border-radius: 4px; /* Add rounded corners */
+  transition: background-color 0.3s ease; /* Add a smooth transition effect */
+}
+
+.submit-button:hover {
+  background-color: #45a049; /* Change the background color on hover */
+}
+
+.submit-button:active {
+  background-color: #3e8e41; /* Change the background color when pressed */
+}
+#password{
+  width: 30%;border:2px solid #ced4da
+}
+
+  </style>
+  <title>PDF tool</title>
+</head>
+
+<body >
+  
+  <div id="wrapper" style="overflow: hidden;">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark  sticky-top" >
+      <a class="navbar-brand" href="#" style="margin-left: 1%;">PDF tool</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+        <a class="nav-link" style="color: orange;" href="#" id="protect_pdf">Protect PDF</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="unlock_pdf" href="#">Unlock PDF</a>
+          </li>
+         
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <div id="content" class="container mt-5">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-9" id="pdf_style">
+              Protect your PDF here
+            </div>
+        </div>
+         </div>
+         <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-8" id="">
+                <form action="/pdf_tool" method="post" enctype="multipart/form-data" id="myForm">
+                    {%csrf_token%}
+                <label for="input_style" class="custom-file-label">
+                    <input accept="application/pdf" type="file" id="input_style" class="col-md-6" name="import" >
+                </label>
+                <input style="display: inline;" autocomplete="off" onBlur="if(this.value.trim() == '') {this.value = ''}" placeholder="Set a strong password" class="m-3 form-control form-control" type="password" id="password" name="password">
+  <img src="{% static 'admin/img/show.svg' %}" style="width: 20px; height: auto;" id="passwordToggle" onclick="togglePasswordVisibility()" >
+
+                <div style="left: 70px; position: relative;">
+                  <button type="submit" class="submit-button mn-4">Generate</button>
+
+                </div>
+                <div style="width: 30%; display: none;" class="alert alert-info alert-dismissible fade show mt-4" role="alert" id="message">{{info}}</div>
+                <input type="text" value="protect" id="protect_unlock" style="visibility: hidden;" name="protect_unlock">
+            </form>
+            </div>
+
+        </div>
+         </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="bg-light text-center py-3">
+      <p>&copy; 2023 My PDF tool Web App. All rights reserved to Gaurav Gupta.</p>
+    </footer>
+  </div>
+<!-- --------------------------------------------------------------------------------------------------------- -->
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+    integrity="sha384-3DexdyQ2MeQ3XDM8jizqWZ3S6LRydTuOyvkXnB04wLxHpmmlOoyNYn0iQt3Xjj5x"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-pzjw8f+ua0/gZ8zks5RqXnOg5QbW9k6Ti/QpW+JHXxhLw6++5B3G5O8fyb6Pe9zP"
+    crossorigin="anonymous"></script>
+  <script>
+    // changing text color of protect pdf on click
+  const protectPdfLink = document.getElementById("protect_pdf");
+protectPdfLink.addEventListener("click", function(event) {
+  event.preventDefault();
+  document.getElementById('myForm').reset();
+  protectPdfLink.style.color = 'orange';
+  document.getElementById('pdf_style').innerText = "Protect your PDF here"
+  document.getElementById('unlock_pdf').style.color = ""
+  document.getElementById('protect_unlock').value = 'protect'
+  document.getElementById('password').placeholder = 'Set a strong password'
+});
+   // changing text color of unlock pdf on click
+   const unlockPdfLink = document.getElementById("unlock_pdf");
+unlockPdfLink.addEventListener("click", function(event) {
+  event.preventDefault();
+  document.getElementById('myForm').reset();
+  unlockPdfLink.style.color = 'orange';
+  document.getElementById('pdf_style').innerText = "Unlock your PDF here"
+  document.getElementById('protect_pdf').style.color = ""
+  document.getElementById('protect_unlock').value = 'unlock'
+  document.getElementById('password').placeholder = 'Enter password to unlock'
+
+});
+
+// submitting form via event listener
+  const form = document.getElementById("myForm");
+  const submitButton = document.querySelector(".submit-button");
+  submitButton.addEventListener("click", function(event) {
+    event.preventDefault();
+    const password = document.getElementById('password');
+    const fileInput = document.getElementById('input_style')
+    if (password.value==''){
+      password.placeholder = "Password can't be blank"
+      return
+    }
+    if (fileInput.files.length === 0) {
+      return;
+    }
+    form.submit();
+  document.getElementById('myForm').reset();
+  });
+
+//  manipulating display of message box
+const messageBox = document.getElementById('message');
+if(messageBox.innerText!=''){
+  messageBox.style.display ='block'
+  setTimeout(function fun(){messageBox.style.display='none'},3000)
+}
+// toggling hide/show button
+function togglePasswordVisibility() {
+      var passwordInput = document.getElementById("password");
+      var passwordToggle = document.getElementById("passwordToggle");
+
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        passwordToggle.setAttribute('src', "{% static 'admin/img/hide.svg' %}");
+      } else {
+        passwordInput.type = "password";
+        passwordToggle.setAttribute('src', "{% static 'admin/img/show.svg' %}");
+
+      }
+    }
+  </script>
+</body>
+
+</html>
